@@ -150,6 +150,7 @@ The default implementation is java-otp, this can be switched through System Sett
 Limitations
 **************************************
 i. The Secret Keys are stored in plain text in the Liferay database (and displayed in plain text on the profile screens)
+- TODO: Add debug mode to System > Settings to toggle the Secret Key on the Profile screens
 ii. The Authentication Code is shown on the same screen as the Username and Password rather than a subsequent screen
 iii. More complex authentication authentiction scenarios SSO / Oauth etc. not supported
 iv. Liferay Screens not supported
