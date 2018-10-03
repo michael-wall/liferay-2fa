@@ -145,3 +145,11 @@ This project uses the following TOTP implementation(s):
 - https://github.com/j256/two-factor-auth available here: https://mvnrepository.com/artifact/com.j256.two-factor-auth/two-factor-auth
 
 The default implementation is java-otp, this can be switched through System Settings > Security > TOTP 2FA > TOTP 2FA Implementation.
+
+**************************************
+Limitations
+**************************************
+i. The Secret Keys are stored in plain text in the Liferay database (and displayed in plain text on the profile screens)
+ii. The Authentication Code is shown on the same screen as the Username and Password rather than a subsequent screen
+iii. More complex authentication authentiction scenarios SSO / Oauth etc. not supported
+iv. Liferay Screens not supported
