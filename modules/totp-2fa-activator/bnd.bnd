@@ -1,0 +1,4 @@
+Bundle-Name: totp-2fa-activator
+Bundle-SymbolicName: com.mw.totp-2fa.activator
+Bundle-Version: 1.0.0
+Bundle-Activator: com.mw.totp_2fa.activator.UserSetupActivator

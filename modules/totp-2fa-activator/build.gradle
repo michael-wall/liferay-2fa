@@ -1,0 +1,10 @@
+dependencies {
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.0.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.util.taglib", version: "2.0.0"
+	compileOnly group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
+	compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	
+	compileOnly project(":modules:totp-2fa-key-api")
+	compileOnly project(":modules:totp-2fa-service")
+	compileOnly project(":modules:totp-2fa-qrcode")
+}

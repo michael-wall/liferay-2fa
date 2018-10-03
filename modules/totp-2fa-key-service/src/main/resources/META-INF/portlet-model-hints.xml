@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.mw.totp_2fa.key.model.SecretKey">
+		<field name="uuid" type="String" />
+		<field name="secretKeyId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="secretKey" type="String" />
+	</model>
+</model-hints>

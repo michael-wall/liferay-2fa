@@ -1,0 +1,9 @@
+Bundle-Name: totp-2fa-key-api
+Bundle-SymbolicName: com.mw.totp_2fa.key.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.mw.totp_2fa.key.exception,\
+	com.mw.totp_2fa.key.model,\
+	com.mw.totp_2fa.key.service,\
+	com.mw.totp_2fa.key.service.persistence
+-includeresource: META-INF/service.xml=../totp-2fa-key-service/service.xml

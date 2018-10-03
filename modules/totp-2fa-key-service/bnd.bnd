@@ -1,0 +1,5 @@
+Bundle-Name: totp-2fa-key-service
+Bundle-SymbolicName: com.mw.totp_2fa.key.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true

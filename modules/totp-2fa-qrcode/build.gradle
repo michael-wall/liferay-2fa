@@ -1,0 +1,27 @@
+dependencies {
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.6.0"
+	compileOnly group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
+	compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.configuration.metatype", version: "2.0.3"
+	compileOnly group: "javax.portlet", name: "portlet-api", version: "2.0"
+    compileOnly group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
+    compileOnly group: "com.liferay", name: "com.liferay.users.admin.api", version: "3.0.0"
+
+	//Mail
+	compileOnly group: "javax.mail", name: "mail", version :"1.4"
+
+	//QR Code
+    compile group: "com.google.zxing", name: "javase", version: "3.3.0"	    
+    compile group: "com.google.zxing", name: "core", version: "3.3.0"
+    compile group: "com.beust", name: "jcommander", version: "1.72"
+    compile group: "com.github.jai-imageio", name: "jai-imageio-core", version: "1.4.0"
+    
+	//JWT Token Generation
+	compile group: "com.auth0", name: "java-jwt", version :"3.4.0"
+	compile group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "2.9.7"
+	compile group: "com.fasterxml.jackson.core", name: 'jackson-core', version: "2.9.7"
+	compile group: "com.fasterxml.jackson.core", name: 'jackson-databind', version: "2.9.7"
+	
+    compileOnly project(":modules:totp-2fa-service")
+    compileOnly project(":modules:totp-2fa-key-api")
+}

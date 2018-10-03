@@ -1,0 +1,15 @@
+Bundle-Name: totp-2fa-service
+Bundle-SymbolicName: com.mw.totp-2fa.service
+Bundle-Version: 1.0.0
+Bundle-ClassPath:\
+  .,\
+  lib/java-otp-0.1.0.jar,\
+  lib/two-factor-auth-1.0.jar
+-includeresource:\
+  lib/java-otp-0.1.0.jar=java-otp-0.1.0.jar,\
+  lib/two-factor-auth-1.0.jar=two-factor-auth-1.0.jar
+Export-Package: \
+	com.mw.totp_2fa.config,\
+	com.mw.totp_2fa.api,\
+	com.mw.totp_2fa.util
+-metatype:*	

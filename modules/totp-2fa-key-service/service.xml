@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder package-path="com.mw.totp_2fa.key">
+	<namespace>totp</namespace>
+	<entity local-service="true" name="SecretKey" remote-service="false" uuid="true">
+		<column name="secretKeyId" primary="true" type="long" />
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="secretKey" type="String" />
+
+		<finder name="C_U" return-type="SecretKey" unique="true" db-index="true">
+			<finder-column name="companyId" />
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+</service-builder>
