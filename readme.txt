@@ -8,9 +8,14 @@ It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-
 
 The Google Authenticator app (available for iPhone and Android) or other 2FA apps can be used by the user during login to generate a one-time password.
 
+A QR Code is used to configure user accounts in the 2FA app.
+
 The project adds an 'Authentication Code' field to the Liferay Login screen below the Password field and verifies the 'Authentication Code' entered by the user as part of the Login workflow.
 
-QR Codes are used to configure the users account in the 2FA app.
+**************************************
+Prerequisites
+**************************************
+1. The deployment steps assume that outbound email is setup in Server Administration > Mail e.g. using FakeSMTP (http://nilhcem.com/FakeSMTP/)
 
 **************************************
 Deployment & Setup
@@ -64,7 +69,7 @@ Notes
 **************************************
 
 i. Supported Liferay versions: DXP 7.1
-ii. 2 Factor Authentication Login must be explicitly configured and enabled after initial deployment, see 'Deployment & Setup Steps' below
+ii. 2 Factor Authentication Login must be explicitly configured and enabled after initial deployment, see 'Deployment & Setup Steps' to enable
 iii. The Secret Keys are stored in plain text in the totp_secretkey table (created by Service Builder)
 iv. Ensure that the phone and server time are roughly the same, if not then the generated codes may not match when the comparison is done, as the code is only valid for 30 seconds
 v. If the Google Authenticator code is red it means it is about to expire
@@ -74,6 +79,8 @@ vii. A bug in the Liferay DXP 7.1 Senna / Single Page Application (SPA) implemen
 - Senna is turned off for the Login form / portlet through the login.jsp fragment to ensure this doesn't prevent with the Authenticator functioning as expected
 iix. The project uses an auth.pipeline.post Authenticator. If the regular credentials are not valid then the custom Authenticator will not be triggered
 ix. If you change company.security.auth.type (either through portal-ext.properties or the GUI then you will need to update the System Settings > Security > TOTP 2FA > Temporary Secret Key Mappings to use the new identifier for each user
+x. QR Code URLs send by email are valid for 60 minutes by default. The user can request a new QR Code URL to be sent to their email address. The validity duration can be changed in Control Panel > Configuration > System Settings > Security > TOTP 2FA > QR Code URL Duration
+xi. You can bypass 2FA checks for non-Administrator users by defining a Regular User Role, adding the users to the role and setting the System Settings > TOTP 2FA > Login TOTP 2FA Skip User Role setting
 
 **************************************
 OSGi Bundles
@@ -106,7 +113,7 @@ com.mw.totp-2fa.user.model.listener
 - Contains a User Model Listener with afterCreate method to add a Secret Key when a new user is created and email a link to the QR Code to the user
 
 com.mw.totp-2fa.activator
-- Contains a BundleActivator that will generate Secret Keys for all users that don't have one and email a link to the QR Code to the user
+- Contains a BundleActivator that will generate Secret Keys for all users that don't already have one and email a link to the QR Code to the user
 
 **************************************
 2 Factor Authentication App setup
