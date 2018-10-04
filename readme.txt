@@ -2,7 +2,7 @@
 Intro
 **************************************
 
-This project adds 2 Factor Authentication to Liferay DXP 7.1 with QR Code support.
+This project adds 2 Factor Authentication to Liferay DXP 7.1 with QR Code support. See this blog post for screenshots: https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1
 
 It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-time password using a user specific shared secret key and the current time. TOTP is widely used in two-factor authentication systems.
 
@@ -70,7 +70,7 @@ Notes
 
 i. Supported Liferay versions: DXP 7.1
 ii. 2 Factor Authentication Login must be explicitly configured and enabled after initial deployment, see 'Deployment & Setup Steps' to enable
-iii. The Secret Keys are stored in plain text in the totp_secretkey table (created by Service Builder)
+iii. The user specific Secret Keys are stored in plain text in the totp_secretkey table (created by Service Builder)
 iv. Ensure that the phone and server time are roughly the same, if not then the generated codes may not match when the comparison is done, as the code is only valid for 30 seconds
 v. If the Google Authenticator code is red it means it is about to expire
 - Wait until a new one is generated before trying as a time difference of a few seconds between the phone and server means it may not work
@@ -149,8 +149,14 @@ The default implementation is java-otp, this can be switched through System Sett
 **************************************
 Limitations
 **************************************
-i. The Secret Keys are stored in plain text in the Liferay database (and displayed in plain text on the profile screens)
-- TODO: Add debug mode to System > Settings to toggle the Secret Key on the Profile screens
+i. The user specific Secret Keys are stored in plain text in the Liferay database
 ii. The Authentication Code is shown on the same screen as the Username and Password rather than a subsequent screen
-iii. More complex authentication authentiction scenarios SSO / Oauth etc. not supported
+iii. More complex authentication scenarios such as SSO / Oauth etc. not supported
 iv. Liferay Screens not supported
+
+**************************************
+TODO
+**************************************
+i. The auth.pipeline.post Authenticator generates the Authentication Token for comparison based on the current time.
+- Some implementations allow codes that should have been generated before or after the current time in order to account for slight clock skews, network latency and user delays.
+- Add a setting to System Settings > TOTP 2FA to support the previous and next Code based on current timestamp (defaulted to not enabled)

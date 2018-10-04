@@ -45,7 +45,7 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 	public abstract void doFilter(RenderRequest request, RenderResponse response, FilterChain chain)
 			throws IOException, PortletException;
 	
-	public String getContent(boolean isUserAdminScreen, QRCodeService qrCodeService, boolean hasSecretKey, String portletId, RenderRequest request, User user, SecretKey secretKeyObject) {
+	public String getContent(boolean isUserAdminScreen, boolean showSecretKeysOnAccountScreens, QRCodeService qrCodeService, boolean hasSecretKey, String portletId, RenderRequest request, User user, SecretKey secretKeyObject) {
 		StringBuffer customText = new StringBuffer();
 
 		String generateSecretKeyLabel = null;
@@ -104,16 +104,19 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 		}
 
 		if (hasSecretKey) { // Show the secret key and the QR Code image
-			String secretKeyString = secretKeyObject.getSecretKey();
+			if (showSecretKeysOnAccountScreens) {
+				String secretKeyString = secretKeyObject.getSecretKey();
+				String secretKeyLabel = LanguageUtil.get(request.getLocale(), "2fa-secret-key");
+				
+				customText.append("<br><br>");
+				customText.append("<strong>" + secretKeyLabel + "</strong>");
+				customText.append("<br>");
+				customText.append(secretKeyString);				
+			}
+			
 			String qrCodeUrl = qrCodeService.getQRCodeURL(user, QRCodeConstants.QR_CODE_JWT_URL_TYPE.WEB);
-
-			String secretKeyLabel = LanguageUtil.get(request.getLocale(), "2fa-secret-key");
 			String qrCodeLabel = LanguageUtil.get(request.getLocale(), "2fa-qr-code");
 
-			customText.append("<br><br>");
-			customText.append("<strong>" + secretKeyLabel + "</strong>");
-			customText.append("<br>");
-			customText.append(secretKeyString);
 			customText.append("<br><br>");
 			customText.append("<strong>" + qrCodeLabel + "</strong>");
 			customText.append("<br>");

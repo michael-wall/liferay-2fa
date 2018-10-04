@@ -1,5 +1,6 @@
 package com.mw.totp_2fa.qrcode.usersAdmin;
 
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -7,11 +8,13 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
+import com.mw.totp_2fa.config.TOTP_2FAConfiguration;
 import com.mw.totp_2fa.key.model.SecretKey;
 import com.mw.totp_2fa.key.service.SecretKeyLocalService;
 import com.mw.totp_2fa.qrcode.service.QRCodeService;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -20,7 +23,9 @@ import javax.portlet.filter.FilterChain;
 import javax.portlet.filter.PortletFilter;
 import javax.portlet.filter.RenderResponseWrapper;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
@@ -34,6 +39,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
  */
 @Component(
 	    immediate = true,
+	    configurationPid = TOTP_2FAConfiguration.PID,
 	    property = {
 	         "javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN
 	    },
@@ -85,13 +91,21 @@ public class UsersAdminPortletFilter extends AbstractProfilePortletFilter {
 			String prefixText = text.substring(0, index);
 			String postfixText = text.substring(index);
 
-			String customText = getContent(true, qrCodeService, hasSecretKey, UsersAdminPortletKeys.USERS_ADMIN, request, user, secretKeyObject);
+			String customText = getContent(true, tfaConfiguration.showSecretKeysOnAccountScreens(), qrCodeService, hasSecretKey, UsersAdminPortletKeys.USERS_ADMIN, request, user, secretKeyObject);
 
 			response.getWriter().write(prefixText + customText.toString() + postfixText);
 		} else {
 			response.getWriter().write(text);
 		}
 	}
+	
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		tfaConfiguration = ConfigurableUtil.createConfigurable(TOTP_2FAConfiguration.class, properties);
+	}
+
+	private volatile TOTP_2FAConfiguration tfaConfiguration;	
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, unbind = "-")
 	protected UserLocalService userLocalService;
