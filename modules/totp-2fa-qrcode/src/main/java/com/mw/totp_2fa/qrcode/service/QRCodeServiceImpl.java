@@ -17,7 +17,6 @@ import com.mw.totp_2fa.config.TOTP_2FAConfiguration;
 import com.mw.totp_2fa.qrcode.constants.QRCodeConstants;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
@@ -46,12 +45,12 @@ public class QRCodeServiceImpl implements QRCodeService {
 			InternetAddress toInternetAddress = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			String qrCodeUrl = getQRCodeURL(user, QRCodeConstants.QR_CODE_JWT_URL_TYPE.EMAIL);
 
-			String subject = LanguageUtil.format(Locale.US, "qrCode.mail.subject", tfaConfiguration.applicationName());
+			String subject = LanguageUtil.format(user.getLocale(), "qrCode.mail.subject", tfaConfiguration.applicationName());
 			String[] bodyArgs = { tfaConfiguration.applicationName(), qrCodeUrl };
-			String body = LanguageUtil.format(Locale.US, "qrCode.mail.body", bodyArgs);
+			String body = LanguageUtil.format(user.getLocale(), "qrCode.mail.body", bodyArgs);
 			
 			if (includeFooter) {
-				body += LanguageUtil.get(Locale.US, "qrCode.mail.postfix");			
+				body += LanguageUtil.get(user.getLocale(), "qrCode.mail.postfix");			
 			}
 			
 			MailMessage mailMessage = new MailMessage(fromInternetAddress, toInternetAddress, subject, body, true);
