@@ -6,7 +6,7 @@ This project adds 2 Factor Authentication to Liferay DXP 7.1 with QR Code suppor
 
 It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-time password using a user specific shared secret key and the current time. TOTP is widely used in two-factor authentication systems.
 
-The Google Authenticator app (available for iPhone and Android) or other 2FA apps can be used by the user during login to generate a one-time password.
+The Google Authenticator app (available for iPhone and Android) or other 2FA apps can be used by the user during login to generate a one-time passcode.
 
 A QR Code is used to configure user accounts in the 2FA app.
 
@@ -76,11 +76,10 @@ v. If the Google Authenticator code is red it means it is about to expire
 - Wait until a new one is generated before trying as a time difference of a few seconds between the phone and server means it may not work
 vi. Users with the Liferay Administrator role will always bypass TOTP 2FA on login and can leave the Authenticator Code field empty
 vii. A bug in the Liferay DXP 7.1 Senna / Single Page Application (SPA) implementation unexpectedly prevents the Login Modal Dialog form body fields being included in the parameterMap passed through to the Authenticator
-- Senna is turned off for the Login form / portlet through the login.jsp fragment to ensure this doesn't prevent with the Authenticator functioning as expected
+- Senna is turned off for the Login form / portlet through the login.jsp fragment to ensure this doesn't prevent the Authenticator functioning as expected
 iix. The project uses an auth.pipeline.post Authenticator. If the regular credentials are not valid then the custom Authenticator will not be triggered
-ix. If you change company.security.auth.type (either through portal-ext.properties or the GUI then you will need to update the System Settings > Security > TOTP 2FA > Temporary Secret Key Mappings to use the new identifier for each user
-x. QR Code URLs send by email are valid for 60 minutes by default. The user can request a new QR Code URL to be sent to their email address. The validity duration can be changed in Control Panel > Configuration > System Settings > Security > TOTP 2FA > QR Code URL Duration
-xi. You can bypass 2FA checks for non-Administrator users by defining a Regular User Role, adding the users to the role and setting the System Settings > TOTP 2FA > Login TOTP 2FA Skip User Role setting
+ix. QR Code URLs send by email are valid for 60 minutes by default. The user can request a new QR Code URL to be sent to their email address. The validity duration can be changed in Control Panel > Configuration > System Settings > Security > TOTP 2FA > QR Code URL Duration
+x. You can bypass 2FA checks for non-Administrator users by defining a Regular User Role, adding the users to the role and setting the System Settings > TOTP 2FA > Login TOTP 2FA Skip User Role setting
 
 **************************************
 OSGi Bundles
@@ -150,23 +149,24 @@ The default implementation is java-otp, this can be switched through System Sett
 **************************************
 Supported Locales
 **************************************
-An OSGi Resource Bundle service component is defined for en_US, mapped to TOTP_2FALanguage.properties
+An OSGi Resource Bundle service component is defined for en_US, mapped to TOTP_2FALanguage.properties.
 The subject and body of the QR Code URL email come from the resource bundle based on each users Language / Locale setting.
 If you environment supports other Languages / Locales you can should create additional OSGi Resource Bundle service components and resource bundles. See the Liferay documentation for more info:
 https://dev.liferay.com/en/develop/tutorials/-/knowledge_base/7-0/overriding-language-keys
+If the translations for a users Language / Locale are not available, the system will revert to en_US when generating the QR Code email.
 
 **************************************
 Limitations
 **************************************
 i. The user specific Secret Keys are stored in plain text in the Liferay database
-ii. The Authentication Code is shown on the same screen as the Username and Password rather than a subsequent screen
-iii. More complex authentication scenarios such as SSO / Oauth etc. not supported
-iv. Liferay Screens not supported
-v. System Settings > TOTP 2 FA scope is set to System so the settings apply to all instances
+ii. The Authentication Code is shown on the same screen as the Username and Password rather than on a subsequent screen
+iii. More complex authentication scenarios such as SSO / Oauth etc. are not supported
+iv. Liferay Screens not (currently) supported
+v. System Settings > TOTP 2 FA scope is set to System so the settings apply to all Liferay instances
 
 **************************************
 TODO
 **************************************
 i. The auth.pipeline.post Authenticator generates the Authentication Token for comparison based on the current time.
-- Some applications that use TOTP 2FA allow the code that generated right before or right after the current time in order to account for slight clock skews, network latency and user delays.
-- Add a setting to System Settings > TOTP 2FA to support the previous and next Code based on current timestamp plus or minus 30 seconds (with setting defaulted to not enabled)
+- Some applications that use TOTP 2FA allow the Authentication Code generated right before or right after the current Authentication Code in order to account for slight clock skews, network latency and user delays.
+- Add a setting to System Settings > TOTP 2FA to support matching to the previous, current and next Authentication Code based on current timestamp plus or minus 30 seconds (with setting defaulted to not enabled).
