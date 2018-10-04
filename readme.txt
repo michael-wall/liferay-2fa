@@ -147,6 +147,14 @@ This project uses the following TOTP implementation(s):
 The default implementation is java-otp, this can be switched through System Settings > Security > TOTP 2FA > TOTP 2FA Implementation.
 
 **************************************
+Supported Locales
+**************************************
+An OSGi Resource Bundle service component is defined for en_US, mapped to TOTP_2FALanguage.properties
+The subject and body of the QR Code URL email come from the resource bundle based on each users Language / Locale setting.
+If you environment supports other Languages / Locales you can should create additional OSGi Resource Bundle service components and resource bundles. See the Liferay documentation for more info:
+https://dev.liferay.com/en/develop/tutorials/-/knowledge_base/7-0/overriding-language-keys
+
+**************************************
 Limitations
 **************************************
 i. The user specific Secret Keys are stored in plain text in the Liferay database
