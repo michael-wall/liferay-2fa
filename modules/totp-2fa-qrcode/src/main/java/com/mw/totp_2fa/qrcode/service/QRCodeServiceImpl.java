@@ -17,6 +17,7 @@ import com.mw.totp_2fa.config.TOTP_2FAConfiguration;
 import com.mw.totp_2fa.qrcode.constants.QRCodeConstants;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
@@ -41,16 +42,33 @@ public class QRCodeServiceImpl implements QRCodeService {
 	@Override
 	public void sendEmail(User user, String secretKeyString, boolean includeFooter) {
 		try {
+			// Ideally we want to use the Users selected Language / Locale but if not available then the 
+			// mail Subject & Body are meaningless plus the URL won't be included, so we check if the keys we are using
+			// resolve, and if not, we use en_US.
+			String defaultValue = System.currentTimeMillis() + "";
+			Locale locale = user.getLocale();
+
+			String test1 = LanguageUtil.get(user.getLocale(), "qrCode.mail.subject", defaultValue);
+			String test2 = LanguageUtil.get(user.getLocale(), "qrCode.mail.body", defaultValue);
+			String test3 = LanguageUtil.get(user.getLocale(), "qrCode.mail.postfix", defaultValue);
+			
+			if (test1.equalsIgnoreCase(defaultValue) || test2.equalsIgnoreCase(defaultValue) || test3.equalsIgnoreCase(defaultValue)) {
+				if (_log.isInfoEnabled())
+				_log.info("QR Code URL Email Resource Bundle messages not available for: " + locale.toString() + " so using en_US.");
+				
+				locale = Locale.US;
+			}
+			
 			InternetAddress fromInternetAddress = new InternetAddress(tfaConfiguration.qrcodeEmailFrom(), tfaConfiguration.qrcodeEmailFromLabel());
 			InternetAddress toInternetAddress = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			String qrCodeUrl = getQRCodeURL(user, QRCodeConstants.QR_CODE_JWT_URL_TYPE.EMAIL);
 
-			String subject = LanguageUtil.format(user.getLocale(), "qrCode.mail.subject", tfaConfiguration.applicationName());
+			String subject = LanguageUtil.format(locale, "qrCode.mail.subject", tfaConfiguration.applicationName());
 			String[] bodyArgs = { tfaConfiguration.applicationName(), qrCodeUrl };
-			String body = LanguageUtil.format(user.getLocale(), "qrCode.mail.body", bodyArgs);
+			String body = LanguageUtil.format(locale, "qrCode.mail.body", bodyArgs);
 			
 			if (includeFooter) {
-				body += LanguageUtil.get(user.getLocale(), "qrCode.mail.postfix");			
+				body += LanguageUtil.get(locale, "qrCode.mail.postfix");			
 			}
 			
 			MailMessage mailMessage = new MailMessage(fromInternetAddress, toInternetAddress, subject, body, true);
