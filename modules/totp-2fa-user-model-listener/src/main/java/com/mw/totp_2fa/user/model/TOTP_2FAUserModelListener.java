@@ -36,6 +36,7 @@ public class TOTP_2FAUserModelListener extends BaseModelListener<User> {
 	@Override
 	public void onAfterCreate(User user) throws ModelListenerException {
 
+		//Assumes user is active. Will send even if user status is not 0 (e.g. where workflow apprival required) ...
 		SecretKey secretKeyObject = secretKeyLocalService.addSecretKey(user);
 		
 		if (_log.isInfoEnabled()) {

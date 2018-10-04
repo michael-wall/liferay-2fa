@@ -94,26 +94,27 @@ com.mw.totp-2fa.login.fragment
 - The fragment adds a new dynamic include with key="com.liferay.login.web#/login.jsp#loginFieldsPost" below the Password field
 
 com.mw.totp-2fa.login.auth
-- Contains the Dynamic Include that adds the Authenticator Code field to the Login screen
-- Contains an auth.pipeline.post Authenticator that extracts the Authenticator Code from the Login form and verifies it matches one generated based on the users secretKey and the current time
+- Contains the Dynamic Include component that adds the Authenticator Code field to the Login screen
+- Contains an auth.pipeline.post Authenticator component that extracts the Authenticator Code from the Login form parameters and verifies it matches one generated based on the users secretKey and the current time
 
 com.mw.totp-2fa.service
-- Contains the System Settings > Security > TOTO 2FA Configuration
-- Contains the TOTP Generator Interface and Implementations
+- Contains the System Settings > Security > TOTO 2FA Configuration component
+- Contains the TOTP Generator Interface and Implementation component
+- Contains the en_US Resource Bundle component and corresponding resource bundle
 
 com.mw.totp_2fa.key.api / com.mw.totp_2fa.key.service
-- Contains the Service Builder service for Secret Key entity
+- Contains the Service Builder api and service for the Secret Key entity
 
 com.mw.totp-2fa.qrcode
-- Contains the servlet used to generate / render the QR Codes
-- Contains Portlet Filters to include the QR Codes / Secret Keys on the User Profile screens (password tab)
-- Contains service used to send email with the QR Code links
+- Contains the servlet component used to generate / render the QR Codes
+- Contains Portlet Filter components to include the QR Codes & Secret Keys and Generate / Regenerate actions on the User Profile screens (Password tab)
+- Contains QR Code service component used to send emails with the QR Code URLs
 
 com.mw.totp-2fa.user.model.listener
-- Contains a User Model Listener with afterCreate method to add a Secret Key when a new user is created and email a link to the QR Code to the user
+- Contains a User Model Listener component with afterCreate method to add a Secret Key when a new user is created and email a QR Code URL link to the user
 
 com.mw.totp-2fa.activator
-- Contains a BundleActivator that will generate Secret Keys for all users that don't already have one and email a link to the QR Code to the user
+- Contains a BundleActivator component that will generate Secret Keys for all active users that don't already have one and email a link to the QR Code to the user
 
 **************************************
 2 Factor Authentication App setup
@@ -161,10 +162,11 @@ i. The user specific Secret Keys are stored in plain text in the Liferay databas
 ii. The Authentication Code is shown on the same screen as the Username and Password rather than a subsequent screen
 iii. More complex authentication scenarios such as SSO / Oauth etc. not supported
 iv. Liferay Screens not supported
+v. System Settings > TOTP 2 FA scope is set to System so the settings apply to all instances
 
 **************************************
 TODO
 **************************************
 i. The auth.pipeline.post Authenticator generates the Authentication Token for comparison based on the current time.
-- Some implementations allow codes that should have been generated before or after the current time in order to account for slight clock skews, network latency and user delays.
-- Add a setting to System Settings > TOTP 2FA to support the previous and next Code based on current timestamp (defaulted to not enabled)
+- Some applications that use TOTP 2FA allow the code that generated right before or right after the current time in order to account for slight clock skews, network latency and user delays.
+- Add a setting to System Settings > TOTP 2FA to support the previous and next Code based on current timestamp plus or minus 30 seconds (with setting defaulted to not enabled)
