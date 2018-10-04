@@ -93,8 +93,8 @@ public class QRCodeServlet extends HttpServlet {
 			
 			user = userLocalService.fetchUser(validateJWTResponse[1]);
 			
-			if (user == null) {
-				outStream.println(LanguageUtil.get(req.getLocale(), "matching-user-not-found"));
+			if (user == null || !user.isActive()) {
+				outStream.println(LanguageUtil.get(req.getLocale(), "matching-active-user-not-found"));
 				
 				return;
 			}

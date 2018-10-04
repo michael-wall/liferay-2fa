@@ -88,8 +88,8 @@ public class QRCodeResendServlet extends HttpServlet {
 				return;
 			}
 			
-			if (user == null) {
-				outStream.println(LanguageUtil.get(req.getLocale(), "matching-user-not-found"));
+			if (user == null || !user.isActive()) {
+				outStream.println(LanguageUtil.get(req.getLocale(), "matching-active-user-not-found"));
 				
 				return;
 			}

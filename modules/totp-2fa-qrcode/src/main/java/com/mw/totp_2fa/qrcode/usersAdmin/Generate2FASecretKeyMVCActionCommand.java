@@ -64,6 +64,11 @@ public class Generate2FASecretKeyMVCActionCommand extends BaseMVCActionCommand {
 
 		try {
 			User user = _portal.getSelectedUser(actionRequest); //Uses p_u_i_d
+			
+			//Don't proceed if user inactive.
+			if (user == null || !user.isActive()) {
+				return;
+			}
 
 			SecretKey secretKeyObject = secretKeyLocalService.updateSecretKey(user);
 			

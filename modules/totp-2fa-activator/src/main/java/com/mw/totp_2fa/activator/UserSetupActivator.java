@@ -17,6 +17,14 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
+/**
+ * Bundle Activator that iterates through all users and for Active ones that don't have a Secret Key it creates a SecretKey and sends a QR Code URL to the user.
+ * 
+ *  This runs for ALL users even if the user is inactive / deleted.
+ * 
+ * @author Michael Wall
+ *
+ */
 public class UserSetupActivator implements BundleActivator {
 
 	@Override
@@ -24,32 +32,39 @@ public class UserSetupActivator implements BundleActivator {
 		ServiceReference userServiceReference = bundleContext.getServiceReference(UserLocalService.class.getName());
 		ServiceReference secretKeyServiceReference = bundleContext.getServiceReference(SecretKeyLocalService.class.getName());
 		ServiceReference qrCodeServiceReference = bundleContext.getServiceReference(QRCodeService.class.getName());
-        
+		
 		userLocalService = (UserLocalService)bundleContext.getService(userServiceReference);
 		secretKeyLocalService = (SecretKeyLocalService)bundleContext.getService(secretKeyServiceReference);
 		qrCodeService = (QRCodeService)bundleContext.getService(qrCodeServiceReference);
 		
-		_log.info("UsersCount: " + userLocalService.getUsersCount());
+		if (_log.isInfoEnabled()) {
+			_log.info("UsersCount: " + userLocalService.getUsersCount());	
+		}
 		
+		// Ideally we would use userLocalService.getUsers(companyId, defaultUser, status, start, end, obc) but we don't have companyId
 		List<User> users = userLocalService.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 		
 		long secretKeysAdded = 0;
-		
+
 		for (User user : users) {
-			SecretKey secretKeyObject = secretKeyLocalService.fetchSecretKeyByUserId(user.getCompanyId(), user.getUserId());
-			
-			if (secretKeyObject == null) {
-				//Generate secret key
-				secretKeyObject = secretKeyLocalService.addSecretKey(user);
-				String secretKeyString = secretKeyObject.getSecretKey();
+			if (!user.isDefaultUser() && user.isActive()) { //Only active non default users.
+				SecretKey secretKeyObject = secretKeyLocalService.fetchSecretKeyByUserId(user.getCompanyId(), user.getUserId());
 				
-				qrCodeService.sendEmail(user, secretKeyString, true);
-				
-				secretKeysAdded++;
+				if (secretKeyObject == null) {
+					//Generate secret key
+					secretKeyObject = secretKeyLocalService.addSecretKey(user);
+					String secretKeyString = secretKeyObject.getSecretKey();
+					
+					qrCodeService.sendEmail(user, secretKeyString, true);
+					
+					secretKeysAdded++;
+				}				
 			}
 		}
 		
-		_log.info("SecretKeysAdded: " + secretKeysAdded);
+		if (_log.isInfoEnabled()) {
+			_log.info("Added Secret Key to " + secretKeysAdded + " users.");
+		}
 	}
 
 	@Override

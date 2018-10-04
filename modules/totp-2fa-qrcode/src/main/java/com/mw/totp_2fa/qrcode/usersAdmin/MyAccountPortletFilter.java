@@ -71,7 +71,8 @@ public class MyAccountPortletFilter extends AbstractProfilePortletFilter {
 		
 		User user = userLocalService.fetchUser(userId);
 		
-		if (user == null) {
+		//Don't do anything if user not found or user is not active.
+		if (user == null || !user.isActive()) {
 			response.getWriter().write(text);
 			
 			return;
