@@ -54,7 +54,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 			
 			if (test1.equalsIgnoreCase(defaultValue) || test2.equalsIgnoreCase(defaultValue) || test3.equalsIgnoreCase(defaultValue)) {
 				if (_log.isInfoEnabled())
-				_log.info("QR Code URL Email Resource Bundle messages not available for: " + locale.toString() + " so using en_US.");
+					_log.info("QR Code URL Email Resource Bundle messages not available for: " + locale.toString() + " so using en_US for mail to: " + user.getEmailAddress());
 				
 				locale = Locale.US;
 			}
