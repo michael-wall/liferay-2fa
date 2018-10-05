@@ -2,7 +2,7 @@
 Intro
 **************************************
 
-This project adds 2 Factor Authentication to Liferay DXP 7.1 with QR Code support. See this blog post for screenshots: https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1
+This project extends Liferays Login functionality to add 2 Factor Authentication to Liferay DXP 7.1, with QR Code support. See this blog post for screenshots: https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1
 
 It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-time password using a user specific shared secret key and the current time. TOTP is widely used in two-factor authentication systems.
 
@@ -10,7 +10,7 @@ The Google Authenticator app (available for iPhone and Android) or other 2FA app
 
 A QR Code is used to configure user accounts in the 2FA app.
 
-The project adds an 'Authentication Code' field to the Liferay Login screen below the Password field and verifies the 'Authentication Code' entered by the user as part of the Login workflow.
+The project is OSGi based, using a Portlet Filter to add an 'Authentication Code' field to the existing Liferay Login screen and verifying the 'Authentication Code' entered by the user using an auth.pipeline.post Authenticator.
 
 **************************************
 Prerequisites
@@ -28,7 +28,6 @@ The following steps cover building, deploying, configuring and testing the proje
 2. Perform a Gradle > Refresh Gradle Project then build the totp-2fa OSGi bundles with Gradle through the Gradle Tasks view
 
 3. Copy the following newly built totp-2fa OSGi bundles to the Liferay deploy folder and confirm they deploy successfully with the Gogo shell
-- com.mw.totp-2fa.login.fragment (this is a Fragment bundle so it will remain at Resolved status)
 - com.mw.totp-2fa.login.auth
 - com.mw.totp-2fa.service
 - com.mw.totp_2fa.key.api
@@ -87,13 +86,8 @@ OSGi Bundles
 
 The project consists of the following OSGi bundles:
 
-com.mw.totp-2fa.login.fragment
-- Contains a fragment to overide Login Portlet login.jsp
-- The fragment disables Senna for the login portlet (by adding data-senna-off="true" to the aui:form tag)
-- The fragment adds a new dynamic include with key="com.liferay.login.web#/login.jsp#loginFieldsPost" below the Password field
-
 com.mw.totp-2fa.login.auth
-- Contains the Dynamic Include component that adds the Authenticator Code field to the Login screen
+- Contains a Login portlet PortletFilter component that adds the Authenticator Code field to the Login screen and adds data-senna-off="true" to the Login form html tag
 - Contains an auth.pipeline.post Authenticator component that extracts the Authenticator Code from the Login form parameters and verifies it matches one generated based on the users secretKey and the current time
 
 com.mw.totp-2fa.service
@@ -105,7 +99,7 @@ com.mw.totp_2fa.key.api / com.mw.totp_2fa.key.service
 - Contains the Service Builder api and service for the Secret Key entity
 
 com.mw.totp-2fa.qrcode
-- Contains the servlet component used to generate / render the QR Codes
+- Contains a Servlet component used to generate / render QR Codes
 - Contains Portlet Filter components to include the QR Codes & Secret Keys and Generate / Regenerate actions on the User Profile screens (Password tab)
 - Contains QR Code service component used to send emails with the QR Code URLs
 
@@ -170,3 +164,4 @@ TODO
 i. The auth.pipeline.post Authenticator generates the Authentication Token for comparison based on the current time.
 - Some applications that use TOTP 2FA allow the Authentication Code generated right before or right after the current Authentication Code in order to account for slight clock skews, network latency and user delays.
 - Add a setting to System Settings > TOTP 2FA to support matching to the previous, current and next Authentication Code based on current timestamp plus or minus 30 seconds (with setting defaulted to not enabled).
+ii. Update service dependency handling in com.mw.totp-2fa.activator
