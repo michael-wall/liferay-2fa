@@ -44,6 +44,9 @@ public interface TOTP_2FAConfiguration {
 	
 	@Meta.AD(deflt = "true", required = false, type = Type.Boolean, name = "configuration.showSecretKeysOnAccountScreens.name", description = "configuration.showSecretKeysOnAccountScreens.desc")
 	public boolean showSecretKeysOnAccountScreens();
+	
+	@Meta.AD(deflt = "false", required = false, type = Type.Boolean, name = "configuration.allowForTimeSkew.name", description = "configuration.allowForTimeSkew.desc")
+	public boolean allowForTimeSkew();
 
 	@Meta.AD(deflt = "6", required = false, optionLabels = {"6", "7", "8"}, optionValues = {"6", "7", "8"}, type = Type.Integer, name = "configuration.authenticatorCodeLength.name", description = "configuration.authenticatorCodeLength.desc")
 	public int authenticatorCodeLength();

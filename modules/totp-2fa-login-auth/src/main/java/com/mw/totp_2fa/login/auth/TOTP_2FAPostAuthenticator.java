@@ -63,6 +63,7 @@ public class TOTP_2FAPostAuthenticator implements Authenticator {
 
 	private int verifyAuthenticatorCode(String authType, long companyId, Object identifier, Map<String, String[]> parameterMap)
 			throws AuthException {
+		long time = System.currentTimeMillis();
 		
 		User user = fetchUser(authType, companyId, identifier);
 		
@@ -134,22 +135,8 @@ public class TOTP_2FAPostAuthenticator implements Authenticator {
 			
 			return Authenticator.FAILURE;				
 		}
-			
-		String generatedAuthenticatorCode = getTotpGenerator().getTOTPCode(secretKeyObject.getSecretKey(), tfaConfiguration.authenticatorCodeLength());		
-			
-		if (Validator.isNull(generatedAuthenticatorCode)) {
-			if (_log.isInfoEnabled()) {
-				_log.info("TOTP_2FAPostAuthenticator, return failure as generatedAuthenticatorCode null for: " + identifier);	
-			}
-			
-			return Authenticator.FAILURE;				
-		}
-			
-		if (_log.isDebugEnabled()) {
-			_log.debug("TOTP_2FAPostAuthenticator, authenticatorCode: " + authenticatorCode + ", generatedAuthenticatorCode: " + generatedAuthenticatorCode + " for: " + identifier);
-		}
-		
-		if (authenticatorCode.equalsIgnoreCase(generatedAuthenticatorCode)) {
+
+		if (getTotpGenerator().isMatch(String.valueOf(identifier), authenticatorCode, tfaConfiguration.allowForTimeSkew(), secretKeyObject.getSecretKey(), tfaConfiguration.authenticatorCodeLength(), time)) {
 			if (_log.isDebugEnabled()) {
 				_log.debug("TOTP_2FAPostAuthenticator, return success as authenticatorCode matches generatedAuthenticatorCode for: " + identifier);
 			}
@@ -188,6 +175,7 @@ public class TOTP_2FAPostAuthenticator implements Authenticator {
 			_log.info("tfaConfiguration.loginTotp2faEnabled: " + tfaConfiguration.loginTotp2faEnabled());
 			_log.info("tfaConfiguration.loginTotp2faSkipUserRole: " + tfaConfiguration.loginTotp2faSkipUserRole());
 			_log.info("tfaConfiguration.authenticatorCodeLength: " + tfaConfiguration.authenticatorCodeLength());
+			_log.info("tfaConfiguration.allowForTimeSkew: " + tfaConfiguration.allowForTimeSkew());
 			_log.info("tfaConfiguration.totp2faImplementation: " + tfaConfiguration.totp2faImplementation());
 			_log.info("TOTP Generator Impl filter: " + getFilter());
 			_log.info("*********************************************");
