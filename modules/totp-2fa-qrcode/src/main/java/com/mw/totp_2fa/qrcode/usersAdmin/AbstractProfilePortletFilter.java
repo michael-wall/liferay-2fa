@@ -46,7 +46,7 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 			throws IOException, PortletException;
 	
 	public String getContent(boolean isUserAdminScreen, boolean showSecretKeysOnAccountScreens, QRCodeService qrCodeService, boolean hasSecretKey, String portletId, RenderRequest request, User user, SecretKey secretKeyObject) {
-		StringBuffer customText = new StringBuffer();
+		StringBuilder customText = new StringBuilder();
 
 		String generateSecretKeyLabel = null;
 
