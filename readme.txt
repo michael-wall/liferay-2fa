@@ -2,7 +2,7 @@
 Intro
 **************************************
 
-This project extends Liferays Login functionality to add 2 Factor Authentication to Liferay DXP 7.1, with QR Code support. See this blog post for screenshots: https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1
+This project extends the Liferay Login functionality to add 2 Factor Authentication to Liferay DXP 7.1, with QR Code support. See this blog post for screenshots: https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1
 
 It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-time password using a user specific shared secret key and the current time. TOTP is widely used in two-factor authentication systems.
 
