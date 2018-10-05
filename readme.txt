@@ -71,8 +71,9 @@ i. Supported Liferay versions: DXP 7.1
 ii. 2 Factor Authentication Login must be explicitly configured and enabled after initial deployment, see 'Deployment & Setup Steps' to enable
 iii. The user specific Secret Keys are stored in plain text in the totp_secretkey table (created by Service Builder)
 iv. Ensure that the phone and server time are roughly the same, if not then the generated codes may not match when the comparison is done, as the code is only valid for 30 seconds
+- See System Settings > TOTP 2FA > Advanced > Allow for Time Skew below
 v. If the Google Authenticator code is red it means it is about to expire
-- Wait until a new one is generated before trying as a time difference of a few seconds between the phone and server means it may not work
+- If Allow for Time Skew is off then wait until a new one is generated before trying as a time difference of a few seconds between the phone and server means it may not work
 vi. Users with the Liferay Administrator role will always bypass TOTP 2FA on login and can leave the Authenticator Code field empty
 vii. A bug in the Liferay DXP 7.1 Senna / Single Page Application (SPA) implementation unexpectedly prevents the Login Modal Dialog form body fields being included in the parameterMap passed through to the Authenticator
 - Senna is turned off for the Login form / portlet through the login.jsp fragment to ensure this doesn't prevent the Authenticator functioning as expected
