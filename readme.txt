@@ -14,6 +14,7 @@ It uses the Time-based One-Time Password algorithm (TOTP), which computes a one-
 2. Access to an iOS or Android OS device to download and run Google Authenticator app or other 2FA app
 
 # Deployment & Setup
+
 The following steps cover building, deploying, configuring and testing:
 
 1. The GitHub Repository is a Liferay Workspace. Clone or download the Repository and import into an Eclipse Workspace as a Liferay Workspace
