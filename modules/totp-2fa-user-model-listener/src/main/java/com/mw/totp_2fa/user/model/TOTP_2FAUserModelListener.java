@@ -43,7 +43,7 @@ public class TOTP_2FAUserModelListener extends BaseModelListener<User> {
 			_log.info("SecretKey created for: " + user.getScreenName());
 		}
 
-		qrCodeService.sendEmail(user, secretKeyObject.getSecretKey(), false);
+		qrCodeService.sendEmail(user, secretKeyObject.getSecretKey());
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, unbind = "-")

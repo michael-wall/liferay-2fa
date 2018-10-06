@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.mw.totp_2fa.api.TOTP_2FAGenerator;
+import com.mw.totp_2fa.config.TOTP_2FAConfiguration;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -29,11 +30,11 @@ public class TOTP_2FAGeneratorJavaOptImpl implements TOTP_2FAGenerator {
 	private final static String LOG_PREFIX = "TOTP_2FAGeneratorJavaOptImpl";
 
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#isMatch(java.lang.String, java.lang.String, boolean, java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#isMatch(java.lang.String, java.lang.String, boolean, java.lang.String, int, int, long)
 	 */
-	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, long time) {
+	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 		if (!allowForTimeSkew) {
-			String generatedAuthenticatorCode = getTOTPCode(secretKey,authenticatorCodeLength, time);
+			String generatedAuthenticatorCode = getTOTPCode(secretKey,authenticatorCodeLength, authenticatorCodeDuration, time);
 			
 			if (_log.isDebugEnabled()) {
 				_log.debug(LOG_PREFIX + " authenticatorCode: " + userProvidedCode + ", generatedAuthenticatorCode: " + generatedAuthenticatorCode + " for: " + identifier);
@@ -43,7 +44,7 @@ public class TOTP_2FAGeneratorJavaOptImpl implements TOTP_2FAGenerator {
 				return true;
 			}
 		} else {
-			String[] generatedAuthenticatorCode = getTOTPCodes(secretKey,authenticatorCodeLength, time);
+			String[] generatedAuthenticatorCode = getTOTPCodes(secretKey,authenticatorCodeLength, authenticatorCodeDuration, time);
 			
 			if (_log.isDebugEnabled()) {
 				_log.debug(LOG_PREFIX + " authenticatorCode: " + userProvidedCode + ", generatedAuthenticatorCodes: " + Arrays.toString(generatedAuthenticatorCode) + " for: " + identifier);
@@ -60,13 +61,13 @@ public class TOTP_2FAGeneratorJavaOptImpl implements TOTP_2FAGenerator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCode(java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCode(java.lang.String, int, int, long)
 	 */
 	@Override
-	public String getTOTPCode(String secretKey, int authenticatorCodeLength, long time) {
+	public String getTOTPCode(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 
 		try {
-			TimeBasedOneTimePasswordGenerator totpGenerator = new TimeBasedOneTimePasswordGenerator(AUTHENTICATOR_CODE_DURATION, TimeUnit.SECONDS, authenticatorCodeLength, TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA1);				
+			TimeBasedOneTimePasswordGenerator totpGenerator = new TimeBasedOneTimePasswordGenerator(authenticatorCodeDuration, TimeUnit.SECONDS, authenticatorCodeLength, TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA1);				
 
 			Base32 base32 = new Base32();
 			byte[] optBytes = base32.decode(secretKey);
@@ -89,24 +90,24 @@ public class TOTP_2FAGeneratorJavaOptImpl implements TOTP_2FAGenerator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCodes(java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCodes(java.lang.String, int, int, long)
 	 */
 	@Override
-	public String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, long time) {
+	public String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 
 		String totpCodes[] = new String[3];
 		
 		try {
-			TimeBasedOneTimePasswordGenerator totpGenerator = new TimeBasedOneTimePasswordGenerator(AUTHENTICATOR_CODE_DURATION, TimeUnit.SECONDS, authenticatorCodeLength, TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA1);				
+			TimeBasedOneTimePasswordGenerator totpGenerator = new TimeBasedOneTimePasswordGenerator(authenticatorCodeDuration, TimeUnit.SECONDS, authenticatorCodeLength, TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA1);				
 
 			Base32 base32 = new Base32();
 			byte[] optBytes = base32.decode(secretKey);
 			
 			SecretKeySpec optSecretKey = new SecretKeySpec(optBytes, TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA1);
 			
-			totpCodes[0] = String.format("%0" + authenticatorCodeLength + "d", totpGenerator.generateOneTimePassword(optSecretKey, new Date(time - (int)AUTHENTICATOR_CODE_DURATION * 1000)));
+			totpCodes[0] = String.format("%0" + authenticatorCodeLength + "d", totpGenerator.generateOneTimePassword(optSecretKey, new Date(time - (authenticatorCodeDuration * 1000))));
 			totpCodes[1] = String.format("%0" + authenticatorCodeLength + "d", totpGenerator.generateOneTimePassword(optSecretKey, new Date(time)));
-			totpCodes[2] = String.format("%0" + authenticatorCodeLength + "d", totpGenerator.generateOneTimePassword(optSecretKey, new Date(time + (int)AUTHENTICATOR_CODE_DURATION * 1000)));
+			totpCodes[2] = String.format("%0" + authenticatorCodeLength + "d", totpGenerator.generateOneTimePassword(optSecretKey, new Date(time + (authenticatorCodeDuration * 1000))));
 
 			return totpCodes;
 			

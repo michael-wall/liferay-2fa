@@ -1,9 +1,6 @@
 package com.mw.totp_2fa.api;
 
 public interface TOTP_2FAGenerator {
-	public static final long AUTHENTICATOR_CODE_DURATION = 30; // Intentionally not externalized.
-	
-	public static final String ALGORITHM = "SHA1"; // Intentionally not externalized.
 	
 	public interface TOTP_API_IMPLEMENTATIONS {
 		public static final String JAVA_OPT = "java-otp";
@@ -22,20 +19,22 @@ public interface TOTP_2FAGenerator {
 	 * 
 	 * @param secretKey
 	 * @param authenticatorCodeLength
+	 * @param authenticatorCodeDuration
 	 * @param time
 	 * @return
 	 */
-	String getTOTPCode(String secretKey, int authenticatorCodeLength, long time);
+	String getTOTPCode(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time);
 	
 	/**
 	 * Get previous TOTP, current TOTP and next TOTP (in that order) based on provided timestamp
 	 * 
 	 * @param secretKey
 	 * @param authenticatorCodeLength
+	 * @param authenticatorCodeDuration
 	 * @param time
 	 * @return
 	 */
-	String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, long time);
+	String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time);
 	
 	/**
 	 * Check if the provided code matches the generated one(s).
@@ -45,8 +44,9 @@ public interface TOTP_2FAGenerator {
 	 * @param allowForTimeSkew
 	 * @param secretKey
 	 * @param authenticatorCodeLength
+	 * @param authenticatorCodeDuration
 	 * @param time
 	 * @return
 	 */
-	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, long time);
+	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time);
 }

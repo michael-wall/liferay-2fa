@@ -55,7 +55,7 @@ public class UserSetupActivator implements BundleActivator {
 					secretKeyObject = secretKeyLocalService.addSecretKey(user);
 					String secretKeyString = secretKeyObject.getSecretKey();
 					
-					qrCodeService.sendEmail(user, secretKeyString, true);
+					qrCodeService.sendEmail(user, secretKeyString);
 					
 					secretKeysAdded++;
 				}				

@@ -8,10 +8,9 @@ public interface QRCodeService {
 	 * Uses MailServiceUtil.sendEmail to send an email to the user. The email contains a link to view the QR Code
 	 * 
 	 * @param user
-	 * @param type
 	 * @param secretKeyString
 	 */
-	void sendEmail(User user, String secretKeyString, boolean includeFooter);
+	void sendEmail(User user, String secretKeyString);
 
 	/**
 	 * Generate QR Code URL from configuration and user. Details passed in JWT to avoid tampering.

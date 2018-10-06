@@ -49,6 +49,7 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 		StringBuilder customText = new StringBuilder();
 
 		String generateSecretKeyLabel = null;
+		String sendEmailLabel = null;
 
 		//Custom label based on screen type and whether the user already has a secret key...
 		if (isUserAdminScreen) {
@@ -56,6 +57,7 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 			
 			if (hasSecretKey) {
 				generateSecretKeyLabel = LanguageUtil.get(request.getLocale(), "regenerate-secret-key-and-email-qr-code");
+				sendEmailLabel = LanguageUtil.get(request.getLocale(), "email-2fa-qr-code-url");
 			}
 		} else {
 			generateSecretKeyLabel = LanguageUtil.get(request.getLocale(), "generate-secret-key");
@@ -76,20 +78,34 @@ public abstract class AbstractProfilePortletFilter implements RenderFilter{
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
 		//The Action URL to call the custom MVCActionCommand
-		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(request,
+		LiferayPortletURL generateSecretKeyActionURL = PortletURLFactoryUtil.create(request,
 				portletId, PortletRequest.ACTION_PHASE);
-		liferayPortletURL.setParameter("p_u_i_d", String.valueOf(user.getUserId()));
+		generateSecretKeyActionURL.setParameter("p_u_i_d", String.valueOf(user.getUserId()));
 		if (hasSecretKey) {//Regenerating
-			liferayPortletURL.setParameter("javax.portlet.action", "/users_admin/regenerate_2fa_secret_key");
+			generateSecretKeyActionURL.setParameter("javax.portlet.action", "/users_admin/regenerate_2fa_secret_key");
 		} else {//Generating for first time
-			liferayPortletURL.setParameter("javax.portlet.action", "/users_admin/generate_2fa_secret_key");
+			generateSecretKeyActionURL.setParameter("javax.portlet.action", "/users_admin/generate_2fa_secret_key");
 		}
 		
-		liferayPortletURL.setParameter("redirect", themeDisplay.getURLCurrent());
-		liferayPortletURL.setParameter("sendEmail", Boolean.toString(isUserAdminScreen)); //Send an email only if not myAccount.
+		generateSecretKeyActionURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		generateSecretKeyActionURL.setParameter("sendEmail", Boolean.toString(isUserAdminScreen)); //Send an email only if not myAccount.
 
-		// TODO MW Cleanup / make a button etc.
-		customText.append("<a href=\"" + liferayPortletURL.toString() + "\">" + generateSecretKeyLabel + "</a>&nbsp;" + anyUnsavedChangesLabel);
+		//Only applicable when User Admin and Has Secret Key
+		if (hasSecretKey && isUserAdminScreen) {
+			LiferayPortletURL sendEmailActionURL = PortletURLFactoryUtil.create(request,
+					portletId, PortletRequest.ACTION_PHASE);
+			sendEmailActionURL.setParameter("p_u_i_d", String.valueOf(user.getUserId()));
+			sendEmailActionURL.setParameter("javax.portlet.action", "/users_admin/email_2fa_qr_code_url");
+			
+			sendEmailActionURL.setParameter("redirect", themeDisplay.getURLCurrent());
+			
+			// TODO MW Change to buttons...
+			customText.append("<a href=\"" + sendEmailActionURL.toString() + "\">" + sendEmailLabel + "</a>&nbsp;" + anyUnsavedChangesLabel);
+			customText.append("<br>");
+		}
+
+		// TODO MW Change to buttons...
+		customText.append("<a href=\"" + generateSecretKeyActionURL.toString() + "\">" + generateSecretKeyLabel + "</a>&nbsp;" + anyUnsavedChangesLabel);
 		customText.append("<br>");
 		customText.append("<strong>" + tfaRequiredOnLoginLabel + "</strong>");
 		customText.append("<br>");

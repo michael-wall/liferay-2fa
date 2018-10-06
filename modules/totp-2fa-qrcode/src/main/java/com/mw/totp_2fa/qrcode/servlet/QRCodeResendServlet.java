@@ -75,7 +75,7 @@ public class QRCodeResendServlet extends HttpServlet {
 				
 				return;
 			}
-			
+
 			long[] validateJWTResponse = qrCodeService.validateQRCodeJWT(token, QRCodeConstants.JWT_CLAIM_TYPE.QR_CODE_RESEND);
 			User user = null;
 			
@@ -103,7 +103,7 @@ public class QRCodeResendServlet extends HttpServlet {
 				return;
 			}
 			
-			qrCodeService.sendEmail(user, secretKey.getSecretKey(), true);
+			qrCodeService.sendEmail(user, secretKey.getSecretKey());
 
 			//Return to the user...
 			outStream.println(LanguageUtil.get(req.getLocale(), "qr-code-url-has-been-resent-to-the-account-email-address"));

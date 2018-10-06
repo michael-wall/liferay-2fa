@@ -13,7 +13,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.mw.totp_2fa.api.TOTP_2FAGenerator;
 import com.mw.totp_2fa.config.TOTP_2FAConfiguration;
 import com.mw.totp_2fa.key.model.SecretKey;
 import com.mw.totp_2fa.key.service.SecretKeyLocalService;
@@ -122,9 +121,9 @@ public class QRCodeServlet extends HttpServlet {
 	        + URLEncoder.encode(tfaConfiguration.qrcodeIssuer() + ":" + user.getEmailAddress(), "UTF-8").replace("+", "%20")
 	        + "?secret=" + URLEncoder.encode(secretKey.getSecretKey(), "UTF-8").replace("+", "%20")
 	        + "&issuer=" + URLEncoder.encode(tfaConfiguration.qrcodeIssuer(), "UTF-8").replace("+", "%20")
-			+ "&algorithm=" + URLEncoder.encode(TOTP_2FAGenerator.ALGORITHM, "UTF-8").replace("+", "%20")
+			+ "&algorithm=" + URLEncoder.encode(TOTP_2FAConfiguration.ALGORITHM, "UTF-8").replace("+", "%20")
 			+ "&digits=" + tfaConfiguration.authenticatorCodeLength()
-			+ "&period=" + TOTP_2FAGenerator.AUTHENTICATOR_CODE_DURATION;
+			+ "&period=" + tfaConfiguration.authenticatorCodeDuration();
 
 			//Generate the QR Code
 			byte[] qrCode = getQRCodeImage(barcode, QRCodeConstants.QR_CODE_WIDTH, QRCodeConstants.QR_CODE_HEIGHT);

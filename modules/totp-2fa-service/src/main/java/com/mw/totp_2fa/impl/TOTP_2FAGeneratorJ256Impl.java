@@ -25,9 +25,9 @@ public class TOTP_2FAGeneratorJ256Impl implements TOTP_2FAGenerator {
 	public static final int EXPECTED_AUTHENTICATOR_CODE_LENGTH = 6;
 
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#isMatch(java.lang.String, java.lang.String, boolean, java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#isMatch(java.lang.String, java.lang.String, boolean, java.lang.String, int, int, long)
 	 */
-	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, long time) {
+	public boolean isMatch(String identifier, String userProvidedCode, boolean allowForTimeSkew, String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 		
 		if (_log.isErrorEnabled()) {
 			_log.error(LOG_PREFIX + " authenticatorCodeLength greater than 6, comparison will be based on last 6 digits only for: " + identifier);
@@ -38,7 +38,7 @@ public class TOTP_2FAGeneratorJ256Impl implements TOTP_2FAGenerator {
 		}
 		
 		if (!allowForTimeSkew) {
-			String generatedAuthenticatorCode = getTOTPCode(secretKey,authenticatorCodeLength, time);
+			String generatedAuthenticatorCode = getTOTPCode(secretKey,authenticatorCodeLength, authenticatorCodeDuration, time);
 			
 			if (_log.isDebugEnabled()) {
 				_log.debug(LOG_PREFIX + " authenticatorCode: " + userProvidedCode + ", generatedAuthenticatorCode: " + generatedAuthenticatorCode + " for: " + identifier);
@@ -48,7 +48,7 @@ public class TOTP_2FAGeneratorJ256Impl implements TOTP_2FAGenerator {
 				return true;
 			}
 		} else {
-			String[] generatedAuthenticatorCode = getTOTPCodes(secretKey,authenticatorCodeLength, time);
+			String[] generatedAuthenticatorCode = getTOTPCodes(secretKey,authenticatorCodeLength, authenticatorCodeDuration, time);
 			
 			if (_log.isDebugEnabled()) {
 				_log.debug(LOG_PREFIX + " authenticatorCode: " + userProvidedCode + ", generatedAuthenticatorCodes: " + Arrays.toString(generatedAuthenticatorCode) + " for: " + identifier);
@@ -65,13 +65,13 @@ public class TOTP_2FAGeneratorJ256Impl implements TOTP_2FAGenerator {
 	}	
 	
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCode(java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCode(java.lang.String, int, int, long)
 	 */
 	@Override
-	public String getTOTPCode(String secretKey, int authenticatorCodeLength, long time) {
+	public String getTOTPCode(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 
         try {
-			String totpCode = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, time, (int)AUTHENTICATOR_CODE_DURATION);
+			String totpCode = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, time, authenticatorCodeDuration);
 
 			return totpCode;
 		} catch (GeneralSecurityException e) {
@@ -82,17 +82,17 @@ public class TOTP_2FAGeneratorJ256Impl implements TOTP_2FAGenerator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCodes(java.lang.String, int, long)
+	 * @see com.mw.totp_2fa.api.TOTP_2FAGenerator#getTOTPCodes(java.lang.String, int, int, long)
 	 */
 	@Override
-	public String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, long time) {
+	public String[] getTOTPCodes(String secretKey, int authenticatorCodeLength, int authenticatorCodeDuration, long time) {
 		
 		String totpCodes[] = new String[3];
 
         try {
-        	totpCodes[0] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, (time - (int)AUTHENTICATOR_CODE_DURATION * 1000), (int)AUTHENTICATOR_CODE_DURATION);
-        	totpCodes[1] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, time, (int)AUTHENTICATOR_CODE_DURATION);
-        	totpCodes[2] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, (time + (int)AUTHENTICATOR_CODE_DURATION * 1000), (int)AUTHENTICATOR_CODE_DURATION);
+        	totpCodes[0] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, (time - (authenticatorCodeDuration * 1000)), authenticatorCodeDuration);
+        	totpCodes[1] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, time, authenticatorCodeDuration);
+        	totpCodes[2] = TimeBasedOneTimePasswordUtil.generateNumberString(secretKey, (time + (authenticatorCodeDuration * 1000)), authenticatorCodeDuration);
 
 			return totpCodes;
 		} catch (GeneralSecurityException e) {

@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 import com.mw.totp_2fa.key.model.SecretKey;
@@ -38,9 +37,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
 /**
- * Custom MVC Action Command for UsersAdminPortlet and MyAccountPortlet. 
+ * Custom MVC Action Command for UsersAdminPortlet. 
  * 
- * Used by the corresponding Portlet Filters to generate / regenerate 2FA secret key and email it if applicable.
+ * Used by the corresponding Portlet Filter to email a QR Code URL to the user.
  * 
  * @author Michael Wall
  *
@@ -49,13 +48,11 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN,
-		"javax.portlet.name=" + UsersAdminPortletKeys.MY_ACCOUNT,
-		"mvc.command.name=/users_admin/generate_2fa_secret_key",
-		"mvc.command.name=/users_admin/regenerate_2fa_secret_key"
+		"mvc.command.name=/users_admin/email_2fa_qr_code_url"
     },
     service = MVCActionCommand.class
 )
-public class Generate2FASecretKeyMVCActionCommand extends BaseMVCActionCommand {
+public class Email2FAQRCodeURLMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
@@ -70,11 +67,9 @@ public class Generate2FASecretKeyMVCActionCommand extends BaseMVCActionCommand {
 				return;
 			}
 
-			SecretKey secretKeyObject = secretKeyLocalService.updateSecretKey(user);
+			SecretKey secretKeyObject = secretKeyLocalService.fetchSecretKeyByUserId(user.getCompanyId(), user.getUserId());
 			
-			boolean sendEmail = ParamUtil.getBoolean(actionRequest, "sendEmail", false);
-			
-			if (sendEmail) {
+			if (secretKeyObject != null) {
 				qrCodeService.sendEmail(user, secretKeyObject.getSecretKey());
 				
 				if (_log.isInfoEnabled()) {
@@ -106,5 +101,5 @@ public class Generate2FASecretKeyMVCActionCommand extends BaseMVCActionCommand {
 	private QRCodeService qrCodeService;
 	
 	private static final Log _log = LogFactoryUtil.getLog(
-		Generate2FASecretKeyMVCActionCommand.class);
+		Email2FAQRCodeURLMVCActionCommand.class);
 }

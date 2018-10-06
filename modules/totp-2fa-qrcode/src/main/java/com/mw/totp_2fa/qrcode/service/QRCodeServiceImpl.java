@@ -37,10 +37,10 @@ public class QRCodeServiceImpl implements QRCodeService {
 
 	
 	/* (non-Javadoc)
-	 * @see com.mw.totp_2fa.qrcode.util.QRCodeService#sendEmail(com.liferay.portal.kernel.model.User, java.lang.String, boolean)
+	 * @see com.mw.totp_2fa.qrcode.util.QRCodeService#sendEmail(com.liferay.portal.kernel.model.User, java.lang.String)
 	 */
 	@Override
-	public void sendEmail(User user, String secretKeyString, boolean includeFooter) {
+	public void sendEmail(User user, String secretKeyString) {
 		try {
 			// Ideally we want to use the Users selected Language / Locale but if not available then the 
 			// mail Subject & Body are meaningless plus the URL won't be included, so we check if the keys we are using
@@ -50,9 +50,8 @@ public class QRCodeServiceImpl implements QRCodeService {
 
 			String test1 = LanguageUtil.get(user.getLocale(), "qrCode.mail.subject", defaultValue);
 			String test2 = LanguageUtil.get(user.getLocale(), "qrCode.mail.body", defaultValue);
-			String test3 = LanguageUtil.get(user.getLocale(), "qrCode.mail.postfix", defaultValue);
-			
-			if (test1.equalsIgnoreCase(defaultValue) || test2.equalsIgnoreCase(defaultValue) || test3.equalsIgnoreCase(defaultValue)) {
+
+			if (test1.equalsIgnoreCase(defaultValue) || test2.equalsIgnoreCase(defaultValue)) {
 				if (_log.isInfoEnabled())
 					_log.info("QR Code URL Email Resource Bundle messages not available for: " + locale.toString() + " so using en_US for mail to: " + user.getEmailAddress());
 				
@@ -66,11 +65,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 			String subject = LanguageUtil.format(locale, "qrCode.mail.subject", tfaConfiguration.applicationName());
 			String[] bodyArgs = { tfaConfiguration.applicationName(), qrCodeUrl };
 			String body = LanguageUtil.format(locale, "qrCode.mail.body", bodyArgs);
-			
-			if (includeFooter) {
-				body += LanguageUtil.get(locale, "qrCode.mail.postfix");			
-			}
-			
+
 			MailMessage mailMessage = new MailMessage(fromInternetAddress, toInternetAddress, subject, body, true);
 			MailServiceUtil.sendEmail(mailMessage);
 			

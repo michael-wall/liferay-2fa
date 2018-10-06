@@ -136,7 +136,7 @@ public class TOTP_2FAPostAuthenticator implements Authenticator {
 			return Authenticator.FAILURE;				
 		}
 
-		if (getTotpGenerator().isMatch(String.valueOf(identifier), authenticatorCode, tfaConfiguration.allowForTimeSkew(), secretKeyObject.getSecretKey(), tfaConfiguration.authenticatorCodeLength(), time)) {
+		if (getTotpGenerator().isMatch(String.valueOf(identifier), authenticatorCode, tfaConfiguration.allowForTimeSkew(), secretKeyObject.getSecretKey(), tfaConfiguration.authenticatorCodeLength(), tfaConfiguration.authenticatorCodeDuration(), time)) {
 			if (_log.isDebugEnabled()) {
 				_log.debug("TOTP_2FAPostAuthenticator, return success as authenticatorCode matches generatedAuthenticatorCode for: " + identifier);
 			}
@@ -175,6 +175,7 @@ public class TOTP_2FAPostAuthenticator implements Authenticator {
 			_log.info("tfaConfiguration.loginTotp2faEnabled: " + tfaConfiguration.loginTotp2faEnabled());
 			_log.info("tfaConfiguration.loginTotp2faSkipUserRole: " + tfaConfiguration.loginTotp2faSkipUserRole());
 			_log.info("tfaConfiguration.authenticatorCodeLength: " + tfaConfiguration.authenticatorCodeLength());
+			_log.info("tfaConfiguration.authenticatorCodeDuration: " + tfaConfiguration.authenticatorCodeDuration());
 			_log.info("tfaConfiguration.allowForTimeSkew: " + tfaConfiguration.allowForTimeSkew());
 			_log.info("tfaConfiguration.totp2faImplementation: " + tfaConfiguration.totp2faImplementation());
 			_log.info("TOTP Generator Impl filter: " + getFilter());
