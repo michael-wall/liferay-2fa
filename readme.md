@@ -38,7 +38,7 @@ The following steps cover building, deploying, configuring and testing:
 13. Go to Control Panel > Users
 14. For each user you wish to test with:
 * Select the user, go to General > Password screen
-* Click 'Generate Secret Key and email QR Code' to generate a Secret Key and display a QR Code onscreen
+* Click 'Generate 2FA Secret Key and email QR Code URL' to generate a Secret Key and display a QR Code onscreen
 * In Google Authenticator app click the '+' icon, select 'Scan barcode' and scan the onscreen QR Code to add the user to Google Authenticator app. (Google Authenticator app will need access to your camera.)
 
 **Note: Users created after the full set of application modules are deployed will automatically be assigned a Secret Key on account creation and will be emailed a link to the QR Code.**
