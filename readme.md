@@ -41,7 +41,7 @@ The following steps cover building, deploying, configuring and testing:
 * Click 'Generate Secret Key and email QR Code' to generate a Secret Key and display a QR Code onscreen
 * In Google Authenticator app click the '+' icon, select 'Scan barcode' and scan the onscreen QR Code to add the user to Google Authenticator app. (Google Authenticator app will need access to your camera.)
 
-Note: Users created after the full set of application modules are deployed will automatically be assigned a Secret Key on account creation and will be emailed a link to the QR Code.
+**Note: Users created after the full set of application modules are deployed will automatically be assigned a Secret Key on account creation and will be emailed a link to the QR Code.**
 
 # Notes
 
@@ -140,9 +140,7 @@ The default implementation is java-otp, this can be switched through System Sett
 
 # Supported Locales
 
-An OSGi Resource Bundle service component is defined for en_US, mapped to TOTP_2FALanguage.properties. The subject and body of the QR Code URL email come from the resource bundle based on each users Language / Locale setting. If you environment supports other Languages / Locales you can should create additional OSGi Resource Bundle service components and resource bundles, see [Liferay - Overriding Global Language Keys](https://dev.liferay.com/en/develop/tutorials/-/knowledge_base/7-1/overriding-global-language-keys)
-
-If the translations for a users Language / Locale are not available, the system will revert to en_US when generating the QR Code URL email.
+An OSGi Resource Bundle service component is defined for en_US, mapped to TOTP_2FALanguage.properties. The subject and body of the QR Code URL email come from the resource bundle based on each users Language / Locale setting. If you environment supports other Languages / Locales you can should create additional OSGi Resource Bundle service components and resource bundles, see [Liferay - Overriding Global Language Keys](https://dev.liferay.com/en/develop/tutorials/-/knowledge_base/7-1/overriding-global-language-keys) for more info.<br/>**If the translations for a users Language / Locale are not available, the system will revert to en_US when generating the QR Code URL email.**
 
 # Limitations
 
