@@ -188,8 +188,3 @@ ii. The Authentication Code is shown on the same screen as the Username and Pass
 iii. More complex authentication scenarios such as SSO / Oauth etc. are not supported
 iv. Liferay Screens not (currently) supported
 v. System Settings > TOTP 2 FA scope is set to System so the settings apply to all Liferay instances
-
-**************************************
-TODO
-**************************************
-i. Update service dependency handling in com.mw.totp-2fa.activator
