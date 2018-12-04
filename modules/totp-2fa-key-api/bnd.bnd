@@ -1,5 +1,5 @@
 Bundle-Name: totp-2fa-key-api
-Bundle-SymbolicName: com.mw.totp_2fa.key.api
+Bundle-SymbolicName: com.mw.totp-2fa.key.api
 Bundle-Version: 1.0.0
 Export-Package:\
 	com.mw.totp_2fa.key.exception,\
