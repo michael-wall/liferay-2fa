@@ -29,42 +29,42 @@ public class UserSetupActivator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-//		ServiceReference userServiceReference = bundleContext.getServiceReference(UserLocalService.class.getName());
-//		ServiceReference secretKeyServiceReference = bundleContext.getServiceReference(SecretKeyLocalService.class.getName());
-//		ServiceReference qrCodeServiceReference = bundleContext.getServiceReference(QRCodeService.class.getName());
-//		
-//		userLocalService = (UserLocalService)bundleContext.getService(userServiceReference);
-//		secretKeyLocalService = (SecretKeyLocalService)bundleContext.getService(secretKeyServiceReference);
-//		qrCodeService = (QRCodeService)bundleContext.getService(qrCodeServiceReference);
-//		
-//		if (_log.isInfoEnabled()) {
-//			_log.info("UsersCount: " + userLocalService.getUsersCount());	
-//		}
-//		
-//		// Ideally we would use userLocalService.getUsers(companyId, defaultUser, status, start, end, obc) but we don't have companyId
-//		List<User> users = userLocalService.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-//		
-//		long secretKeysAdded = 0;
-//
-//		for (User user : users) {
-//			if (!user.isDefaultUser() && user.isActive()) { //Only active non default users.
-//				SecretKey secretKeyObject = secretKeyLocalService.fetchSecretKeyByUserId(user.getCompanyId(), user.getUserId());
-//				
-//				if (secretKeyObject == null) {
-//					//Generate secret key
-//					secretKeyObject = secretKeyLocalService.addSecretKey(user);
-//					String secretKeyString = secretKeyObject.getSecretKey();
-//					
-//					qrCodeService.sendEmail(user, secretKeyString);
-//					
-//					secretKeysAdded++;
-//				}				
-//			}
-//		}
-//		
-//		if (_log.isInfoEnabled()) {
-//			_log.info("Added Secret Key to " + secretKeysAdded + " users.");
-//		}
+		ServiceReference userServiceReference = bundleContext.getServiceReference(UserLocalService.class.getName());
+		ServiceReference secretKeyServiceReference = bundleContext.getServiceReference(SecretKeyLocalService.class.getName());
+		ServiceReference qrCodeServiceReference = bundleContext.getServiceReference(QRCodeService.class.getName());
+		
+		userLocalService = (UserLocalService)bundleContext.getService(userServiceReference);
+		secretKeyLocalService = (SecretKeyLocalService)bundleContext.getService(secretKeyServiceReference);
+		qrCodeService = (QRCodeService)bundleContext.getService(qrCodeServiceReference);
+		
+		if (_log.isInfoEnabled()) {
+			_log.info("UsersCount: " + userLocalService.getUsersCount());	
+		}
+		
+		// Ideally we would use userLocalService.getUsers(companyId, defaultUser, status, start, end, obc) but we don't have companyId
+		List<User> users = userLocalService.getUsers(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		
+		long secretKeysAdded = 0;
+
+		for (User user : users) {
+			if (!user.isDefaultUser() && user.isActive()) { //Only active non default users.
+				SecretKey secretKeyObject = secretKeyLocalService.fetchSecretKeyByUserId(user.getCompanyId(), user.getUserId());
+				
+				if (secretKeyObject == null) {
+					//Generate secret key
+					secretKeyObject = secretKeyLocalService.addSecretKey(user);
+					String secretKeyString = secretKeyObject.getSecretKey();
+					
+					qrCodeService.sendEmail(user, secretKeyString);
+					
+					secretKeysAdded++;
+				}				
+			}
+		}
+		
+		if (_log.isInfoEnabled()) {
+			_log.info("Added Secret Key to " + secretKeysAdded + " users.");
+		}
 	}
 
 	@Override
