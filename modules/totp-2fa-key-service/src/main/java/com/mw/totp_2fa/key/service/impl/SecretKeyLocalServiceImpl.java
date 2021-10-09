@@ -14,6 +14,7 @@
 
 package com.mw.totp_2fa.key.service.impl;
 
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
@@ -24,6 +25,7 @@ import com.mw.totp_2fa.key.service.base.SecretKeyLocalServiceBaseImpl;
 import java.security.SecureRandom;
 
 import org.apache.commons.codec.binary.Base32;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * The implementation of the secret key local service.
@@ -39,6 +41,7 @@ import org.apache.commons.codec.binary.Base32;
  * @see SecretKeyLocalServiceBaseImpl
  * @see com.mw.totp_2fa.key.service.SecretKeyLocalServiceUtil
  */
+@Component(service = AopService.class)
 public class SecretKeyLocalServiceImpl extends SecretKeyLocalServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:

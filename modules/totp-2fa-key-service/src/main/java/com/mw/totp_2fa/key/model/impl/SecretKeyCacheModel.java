@@ -14,11 +14,9 @@
 
 package com.mw.totp_2fa.key.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
-
+import com.liferay.petra.lang.HashUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.util.HashUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 
 import com.mw.totp_2fa.key.model.SecretKey;
 
@@ -31,23 +29,22 @@ import java.io.ObjectOutput;
  * The cache model class for representing SecretKey in entity cache.
  *
  * @author Brian Wing Shun Chan
- * @see SecretKey
  * @generated
  */
-@ProviderType
-public class SecretKeyCacheModel implements CacheModel<SecretKey>,
-	Externalizable {
+public class SecretKeyCacheModel
+	implements CacheModel<SecretKey>, Externalizable {
+
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SecretKeyCacheModel)) {
+		if (!(object instanceof SecretKeyCacheModel)) {
 			return false;
 		}
 
-		SecretKeyCacheModel secretKeyCacheModel = (SecretKeyCacheModel)obj;
+		SecretKeyCacheModel secretKeyCacheModel = (SecretKeyCacheModel)object;
 
 		if (secretKeyId == secretKeyCacheModel.secretKeyId) {
 			return true;
@@ -120,8 +117,7 @@ public class SecretKeyCacheModel implements CacheModel<SecretKey>,
 	}
 
 	@Override
-	public void writeExternal(ObjectOutput objectOutput)
-		throws IOException {
+	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		if (uuid == null) {
 			objectOutput.writeUTF("");
 		}
@@ -148,4 +144,5 @@ public class SecretKeyCacheModel implements CacheModel<SecretKey>,
 	public long companyId;
 	public long userId;
 	public String secretKey;
+
 }

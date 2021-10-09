@@ -3,3 +3,9 @@ Bundle-SymbolicName: com.mw.totp-2fa.key.service
 Bundle-Version: 1.0.0
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true
+Bundle-ClassPath:\
+  .,\
+  lib/commons-codec-1.13.jar
+-includeresource:\
+  lib/commons-codec-1.13.jar=commons-codec-1.13.jar
+-dsannotations-options: inherit

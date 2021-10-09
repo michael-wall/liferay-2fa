@@ -23,6 +23,9 @@ import javax.portlet.filter.FilterChain;
 import javax.portlet.filter.PortletFilter;
 import javax.portlet.filter.RenderResponseWrapper;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -41,7 +44,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 	    immediate = true,
 	    configurationPid = TOTP_2FAConfiguration.PID,
 	    property = {
-	         "javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN
+	         "javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN	         
 	    },
 	    service = PortletFilter.class)
 public class UsersAdminPortletFilter extends AbstractProfilePortletFilter {
@@ -84,25 +87,18 @@ public class UsersAdminPortletFilter extends AbstractProfilePortletFilter {
 			hasSecretKey = true;
 		}
 		
-		String fieldsetCloseTag = "</fieldset>";
-
-		int index = text.lastIndexOf(fieldsetCloseTag);
-
-		if (index >= 0) {
-			String prefixText = text.substring(0, index);
-			String postfixText = text.substring(index);
-
-			String customText = getContent(true, tfaConfiguration.showSecretKeysOnAccountScreens(), qrCodeService, hasSecretKey, UsersAdminPortletKeys.USERS_ADMIN, request, user, secretKeyObject);
-
-			response.getWriter().write(prefixText + customText.toString() + postfixText);
-		} else {
-			response.getWriter().write(text);
-		}
+		Document doc = Jsoup.parse(text);
+		Element form = doc.select("form").first();
+		form.append(getContent(true, tfaConfiguration.showSecretKeysOnAccountScreens(), qrCodeService, hasSecretKey, UsersAdminPortletKeys.USERS_ADMIN, request, user, secretKeyObject));
+		
+		response.getWriter().write(doc.html());
 	}
 	
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
+		_log.info("activate!");
+		
 		tfaConfiguration = ConfigurableUtil.createConfigurable(TOTP_2FAConfiguration.class, properties);
 	}
 
