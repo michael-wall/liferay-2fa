@@ -10,11 +10,11 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Michael Wall
  */
-@Component(
-	immediate = true,
-    property = { "language.id=en_US" }, 
-    service = ResourceBundle.class
-)
+//@Component(
+//	immediate = true,
+//    property = { "language.id=en_US" }, 
+//    service = ResourceBundle.class
+//)
 public class LanguageOverride extends ResourceBundle {
 
 	@Override
