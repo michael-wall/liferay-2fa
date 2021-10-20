@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Modified;
 	    configurationPid = TOTP_2FAConfiguration.PID,
 	    property = {
 	         "javax.portlet.name=" + LoginPortletKeys.LOGIN,
-	         "javax.portlet.name=" + LoginPortletKeys.FAST_LOGIN
+	         "javax.portlet.name=" + LoginPortletKeys.FAST_LOGIN,
 	    },
 	    service = PortletFilter.class)
 public class LoginPortletFilter implements RenderFilter{
