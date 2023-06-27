@@ -7,7 +7,8 @@ import aQute.bnd.annotation.metatype.Meta;
 import aQute.bnd.annotation.metatype.Meta.Type;
 
 @ExtendedObjectClassDefinition(category = "totp_2fa", scope = ExtendedObjectClassDefinition.Scope.SYSTEM)
-@Meta.OCD(id = TOTP_2FAConfiguration.PID, localization = "content/TOTP_2FALanguage", name = "configuration.name.totp_2fa")
+//@Meta.OCD(id = TOTP_2FAConfiguration.PID, localization = "content/TOTP_2FALanguage", name = "configuration.name.totp_2fa")
+@Meta.OCD(id = TOTP_2FAConfiguration.PID, name = "configuration.name.totp_2fa")
 public interface TOTP_2FAConfiguration {
 	public static final String ALGORITHM = "SHA1"; // Intentionally not externalized (yet).
 

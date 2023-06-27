@@ -14,8 +14,6 @@
 
 package com.mw.totp_2fa.key.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.mw.totp_2fa.key.model.SecretKey;
 import com.mw.totp_2fa.key.service.SecretKeyLocalServiceUtil;
 
@@ -31,13 +29,13 @@ import com.mw.totp_2fa.key.service.SecretKeyLocalServiceUtil;
  * @see SecretKey
  * @generated
  */
-@ProviderType
-public abstract class SecretKeyBaseImpl extends SecretKeyModelImpl
-	implements SecretKey {
+public abstract class SecretKeyBaseImpl
+	extends SecretKeyModelImpl implements SecretKey {
+
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. All methods that expect a secret key model instance should use the {@link SecretKey} interface instead.
+	 * Never modify or reference this class directly. All methods that expect a secret key model instance should use the <code>SecretKey</code> interface instead.
 	 */
 	@Override
 	public void persist() {
@@ -48,4 +46,5 @@ public abstract class SecretKeyBaseImpl extends SecretKeyModelImpl
 			SecretKeyLocalServiceUtil.updateSecretKey(this);
 		}
 	}
+
 }

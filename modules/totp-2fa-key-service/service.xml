@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
 
-<service-builder package-path="com.mw.totp_2fa.key">
+<service-builder dependency-injector="ds" package-path="com.mw.totp_2fa.key">
 	<namespace>totp</namespace>
 	<entity local-service="true" name="SecretKey" remote-service="false" uuid="true">
 		<column name="secretKeyId" primary="true" type="long" />

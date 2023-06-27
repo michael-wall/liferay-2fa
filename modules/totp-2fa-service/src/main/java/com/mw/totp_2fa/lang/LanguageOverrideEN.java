@@ -8,14 +8,14 @@ import java.util.ResourceBundle;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Michael Wall
+ * @author Michael Wall / siehe https://help.liferay.com/hc/en-us/articles/360017886312-Overriding-Global-Language-Keys
  */
 @Component(
 	immediate = true,
-    property = { "language.id=en_US" }, 
-    service = ResourceBundle.class
+    service = ResourceBundle.class,
+    property = { "language.id=en_US" }
 )
-public class LanguageOverride extends ResourceBundle {
+public class LanguageOverrideEN extends ResourceBundle {
 
 	@Override
     protected Object handleGetObject(String key) {
@@ -28,5 +28,5 @@ public class LanguageOverride extends ResourceBundle {
     }
 
     private final ResourceBundle _resourceBundle = ResourceBundle.getBundle(
-        "content.TOTP_2FALanguage", UTF8Control.INSTANCE);
+        "content.Language", UTF8Control.INSTANCE);
 }

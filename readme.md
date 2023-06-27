@@ -1,6 +1,6 @@
 # Introduction
 
-This OSGi project extends the Liferay Login functionality to add 2 Factor Authentication (2FA) to Liferay DXP 7.1, with QR Code support. See Liferay Blog post [Adding 2FA to Liferay DXP 7.1](https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1) for screenshots.
+This OSGi project ports Michael Wall's 2 Factor Authentication (2FA) Plugin to Liferay CE 7.4.2 CE GA3 (see Liferay Blog post [Adding 2FA to Liferay DXP 7.1](https://community.liferay.com/blogs/-/blogs/adding-2fa-to-liferay-dxp-7-1) for screenshots).
 
 The Google Authenticator app (available for iPhone and Android) or other 2FA apps can be used by the user during login to generate a one-time passcode, with QR Code support included to populate the 2FA app user profile.
 
@@ -45,7 +45,7 @@ The following steps cover building, deploying, configuring and testing:
 
 # Notes
 
-1. Supported Liferay versions: **DXP 7.1**
+1. Supported Liferay versions: **CE 7.4.2 CE GA3+**
 2. 2FA on Login must be explicitly configured and enabled after initial deployment, see 'Deployment & Setup Steps' to enable
 3. Ensure that the phone and server time are roughly the same, if not then the generated codes may not match when the comparison is done, as the code is only valid for 30 / 60 seconds. See System Settings > TOTP 2FA > Advanced > Allow for Time Skew below to make the verification more lenient
 4. If the Google Authenticator code is red it means it is about to expire. If Allow for Time Skew is off then wait until a new one is generated before trying as a time difference of a few seconds between the phone and server means it may not work

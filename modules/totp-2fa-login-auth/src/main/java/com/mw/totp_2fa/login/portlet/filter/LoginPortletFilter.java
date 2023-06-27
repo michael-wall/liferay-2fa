@@ -1,6 +1,6 @@
 package com.mw.totp_2fa.login.portlet.filter;
 
-import com.liferay.login.web.internal.constants.LoginPortletKeys;
+import com.liferay.login.web.constants.LoginPortletKeys;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Modified;
 	    configurationPid = TOTP_2FAConfiguration.PID,
 	    property = {
 	         "javax.portlet.name=" + LoginPortletKeys.LOGIN,
-	         "javax.portlet.name=" + LoginPortletKeys.FAST_LOGIN
+	         "javax.portlet.name=" + LoginPortletKeys.FAST_LOGIN,
 	    },
 	    service = PortletFilter.class)
 public class LoginPortletFilter implements RenderFilter{
